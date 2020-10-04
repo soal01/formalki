@@ -1,20 +1,32 @@
 #include"automat.h"
 
 
+Automat::Automat(std::vector<char> alphabet, size_t countOfVertexes, 
+            std::vector<std::map<char, std::set<size_t>>> edges,
+            std::set<size_t> terminateVertexes)
+            :alphabet_(alphabet_),
+            edges_(edges),
+            countOfVertexes_(countOfVertexes),
+            isTerminate_(countOfVertexes, false)
+            {
+                for (auto u: terminateVertexes) {
+                    isTerminate_[u] = true;
+                }
+            }
 
 void Automat::addEdge(int from, char letter, int to) {
-    edges_[from][letter] = to;
+    edges_[from][letter].insert(to);
 }
 
 size_t Automat::countOfVertexes() const {
-    return vertexes_.size();
+    return countOfVertexes_;
 }
 
-size_t Automat::getVertex(size_t from, char at) const {
+std::set<size_t> Automat::getNextVertexes(size_t from, char at) const {
     if (edges_[from].find(at) != edges_[from].end()) {
-        return edges_[from][at];
+        return std::set<size_t>(edges_[from].at(at));
     } else {
-        return INF;
+        return std::set<size_t>();
     }
 }
 
