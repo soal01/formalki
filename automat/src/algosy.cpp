@@ -7,10 +7,12 @@
 Automat determinateAutomat(const Automat& automat) {
     //std::vector<bool> used;
     std::queue<std::set<size_t> > unprocessedVertexes;
-    std::vector<std::map<char, std::set<size_t>>> newEdges;
+    std::vector<std::map<char, std::set<size_t>>> newEdges(1);
     std::map<std::set<size_t>, size_t> newNames;
+    newNames[{0}] = 0;
     unprocessedVertexes.push({0});
     while (!unprocessedVertexes.empty()) {
+        //std::cout<<"ha"<<std::endl;
         std::set<size_t> vertex = unprocessedVertexes.front();
         unprocessedVertexes.pop();
         for (char alpha : automat.getAlphabet()) {
@@ -25,13 +27,17 @@ Automat determinateAutomat(const Automat& automat) {
                 continue;
 
             if (newNames.find(nextVertex) == newNames.end()) {
-                newNames[nextVertex] = newNames.size();
+                size_t countOfNames = newNames.size();
+                newNames[nextVertex] = countOfNames;
                 unprocessedVertexes.push(nextVertex);
+                newEdges.push_back(std::map<char, std::set<size_t>>());
             } 
             newEdges[newNames[vertex]][alpha].insert(newNames[nextVertex]);
+            std::cout<<"size="<<newEdges[newNames[vertex]].size()<<std::endl;
         }
     } 
     //std::vector<size_t> newVertexes(newNames.size());
+    //std::cout<<"hehe"<<std::endl;
     std::set<size_t> terminateVertexes;
     bool isNextNewVertex;
     for (auto newVertex : newNames) {
@@ -71,10 +77,11 @@ Automat minimizeFullDeterminateAutomat(const Automat& automat) {
     }
     size_t nextClassesCount = oldClassesCount;
     do {
-        nextClassesCount = oldClassesCount;
+        oldClassesCount = nextClassesCount;
         newEdges.clear();
         classOfStr.clear();
         strOfVertex.clear();
+        newEdges=std::vector<std::map<char, std::set<size_t>>>(nextClassesCount);
         for (size_t vertex = 0; vertex < automat.countOfVertexes(); ++vertex) {
             std::string eqStr = std::to_string(classes[vertex]);
             for (char alpha : automat.getAlphabet()) {
@@ -85,9 +92,14 @@ Automat minimizeFullDeterminateAutomat(const Automat& automat) {
             strOfVertex[vertex] = eqStr;
             if (classOfStr.find(eqStr) == classOfStr.end()) {
                 classOfStr[eqStr] = classOfStr.size();
+                newEdges.push_back(std::map<char, std::set<size_t>>());
             }
         }
         nextClassesCount = classOfStr.size();
+        std::cout << "classes=" << nextClassesCount << std::endl;
+        for (size_t vertex = 0; vertex < automat.countOfVertexes(); ++vertex) {
+            classes[vertex] = classOfStr[strOfVertex[vertex]];
+        }
     } while(oldClassesCount < nextClassesCount);
     std::set<size_t> newTerminateVertexes;
     for (size_t vertex = 0; vertex < automat.countOfVertexes(); ++vertex) {
@@ -99,3 +111,29 @@ Automat minimizeFullDeterminateAutomat(const Automat& automat) {
     return Automat(automat.getAlphabet(), oldClassesCount,
                     newEdges, newTerminateVertexes);
 }
+
+
+bool isFullAutomat(const Automat& automat) {
+    for (size_t vertex = 0; vertex < automat.countOfVertexes(); ++vertex) {
+        for (char alpha : automat.getAlphabet()) {
+            std::set<size_t> nextVertexes = automat.getNextVertexes(vertex, alpha);
+            if (nextVertexes.size() == 0) 
+                return false;
+        }
+    }
+    return true;
+}
+
+void makeFull(Automat& automat) {
+    size_t newVertex = automat.countOfVertexes();
+    automat.addVertex();
+    for (size_t vertex = 0; vertex < automat.countOfVertexes(); ++vertex) {
+        for (char alpha : automat.getAlphabet()) {
+            std::set<size_t> nextVertexes = automat.getNextVertexes(vertex, alpha);
+            if (nextVertexes.size() == 0) {
+                automat.addEdge(vertex, alpha, newVertex);
+            }
+        }
+    }
+}
+

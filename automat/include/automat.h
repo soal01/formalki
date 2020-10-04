@@ -15,19 +15,17 @@ public:
     Automat(std::vector<char> alphabet, size_t countOfVertexes, 
             std::vector<std::map<char, std::set<size_t>>> edges,
             std::set<size_t> terminateVertexes);
-            /*:alphabet_(alphabet_),
-            edges_(edges),
-            countOfVertexes_(countOfVertexes),
-            isTerminate_(countOfVertexes, false)
-            {
-                for (auto u: terminateVertexes) {
-                    isTerminate_[u] = true;
-                }
-            }*/
-    
+    Automat(size_t countOfVertexes, std::vector<char> alphabet);
+    Automat();
     void addEdge(int from, char letter, int to);
+    void addVertex();
     size_t countOfVertexes() const;
     std::set<size_t> getNextVertexes(size_t from, char at) const;
     std::vector<char> getAlphabet() const;
     bool isTerminateVertex(size_t vertex) const;
+    void changeTerminate(size_t vertex);
+    friend std::ostream& operator <<(std::ostream& os, const Automat& automat);
 };
+
+std::istream& operator >>(std::istream& is, Automat& automat);
+std::ostream& operator <<(std::ostream& os, const Automat& automat);

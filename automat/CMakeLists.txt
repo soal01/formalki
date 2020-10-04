@@ -18,7 +18,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${Automat_SOURCE_DIR}/lib)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src)
 
-
+add_executable(AutomatHelper main.cpp)
+target_link_libraries(AutomatHelper automat_lib)
 #add_subdirectory(${CMAKE_BINARY_DIR}/../3rdparty/$ENV{GOOGLE_TEST_DIR})
 
 
