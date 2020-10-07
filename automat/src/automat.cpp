@@ -122,3 +122,29 @@ std::ostream& operator <<(std::ostream& os, const Automat& automat) {
     os << "\n";
     return os;
 }
+
+bool Automat::existEdge(size_t from, char at) const {
+    return edges_[from].find(at) != edges_[from].end();
+}
+
+bool Automat::operator==(const Automat& automat) {
+    if (alphabet_ != automat.getAlphabet())
+        return false;
+    if (countOfVertexes_ != automat.countOfVertexes())
+        return false;
+    for (size_t vertex = 0; vertex < countOfVertexes_; ++vertex) {
+        if (isTerminate_[vertex] != automat.isTerminateVertex(vertex))
+            return false;
+    }
+    for (size_t vertex = 0; vertex < countOfVertexes_; ++vertex) {
+        for (char alpha : alphabet_) {
+            if (existEdge(vertex, alpha) != automat.existEdge(vertex, alpha)) 
+                return false;
+            if (existEdge(vertex, alpha)) {
+                if (getNextVertexes(vertex, alpha) != automat.getNextVertexes(vertex, alpha))
+                    return false;
+            }
+        }
+    }
+    return true;
+}

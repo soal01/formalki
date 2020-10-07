@@ -21,9 +21,11 @@ public:
     void addVertex();
     size_t countOfVertexes() const;
     std::set<size_t> getNextVertexes(size_t from, char at) const;
+    bool existEdge(size_t from, char at) const;
     std::vector<char> getAlphabet() const;
     bool isTerminateVertex(size_t vertex) const;
     void changeTerminate(size_t vertex);
+    bool operator==(const Automat& automat);
     friend std::ostream& operator <<(std::ostream& os, const Automat& automat);
 };
 

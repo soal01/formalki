@@ -33,11 +33,8 @@ Automat determinateAutomat(const Automat& automat) {
                 newEdges.push_back(std::map<char, std::set<size_t>>());
             } 
             newEdges[newNames[vertex]][alpha].insert(newNames[nextVertex]);
-            std::cout<<"size="<<newEdges[newNames[vertex]].size()<<std::endl;
         }
     } 
-    //std::vector<size_t> newVertexes(newNames.size());
-    //std::cout<<"hehe"<<std::endl;
     std::set<size_t> terminateVertexes;
     bool isNextNewVertex;
     for (auto newVertex : newNames) {
@@ -96,7 +93,6 @@ Automat minimizeFullDeterminateAutomat(const Automat& automat) {
             }
         }
         nextClassesCount = classOfStr.size();
-        std::cout << "classes=" << nextClassesCount << std::endl;
         for (size_t vertex = 0; vertex < automat.countOfVertexes(); ++vertex) {
             classes[vertex] = classOfStr[strOfVertex[vertex]];
         }
@@ -123,6 +119,7 @@ bool isFullAutomat(const Automat& automat) {
     }
     return true;
 }
+
 
 void makeFull(Automat& automat) {
     size_t newVertex = automat.countOfVertexes();
