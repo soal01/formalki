@@ -5,7 +5,7 @@
 TEST(EqualTest, FirstTest) {
 	Automat a;
 	std::ifstream file;
-	file.open("1.in");
+	file.open("first.in");
 	file >> a;
 	file.clear();
 	file.seekg(0);
@@ -19,7 +19,7 @@ TEST(EqualTest, FirstTest) {
 TEST(DeterminateTest, FirstTest) {
 	Automat a;
 	std::ifstream file;
-	file.open("1.in");
+	file.open("second.in");
 	file >> a;
 	Automat b;
 	file >> b;
@@ -28,3 +28,14 @@ TEST(DeterminateTest, FirstTest) {
 	ASSERT_EQ(a == b, true);
 }
 
+TEST(MinimizeTest, FirstTest) {
+	Automat a;
+	std::ifstream file;
+	file.open("third.in");
+	file >> a;
+	Automat b;
+	file >> b;
+	a = makeMinimalDeterminateAutomat(a);
+	file.close();
+	ASSERT_EQ(a == b, true);
+}

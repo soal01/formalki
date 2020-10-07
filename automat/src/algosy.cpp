@@ -134,3 +134,12 @@ void makeFull(Automat& automat) {
     }
 }
 
+Automat makeMinimalDeterminateAutomat(const Automat& automat) {
+    Automat answer = automat;
+    answer = determinateAutomat(answer);
+    if (!isFullAutomat(answer)) {
+        makeFull(answer);
+    }
+    answer = minimizeFullDeterminateAutomat(answer);
+    return answer;
+}
