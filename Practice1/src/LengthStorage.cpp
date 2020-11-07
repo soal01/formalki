@@ -9,7 +9,7 @@ LengthStorage::LengthStorage(size_t count)
 
 
 LengthStorage::LengthStorage(size_t count, char x)
-    :LengthStorage(c) {
+    :LengthStorage(count) {
     _x = x;
 }
 
@@ -26,44 +26,61 @@ LengthStorage::LengthStorage(size_t count, char a, char x)
     }
 }
 
-LengthStorage concatenate(const LengthStorage& first,
-    const LengthStorage& second) {
-    LengthStorage ans(_lengths.size(), _x);
+LengthStorage::LengthStorage(std::vector<int> lengths, char x)
+    :_lengths(lengths), _x(x) {}
+
+
+size_t LengthStorage::size() const {
+    return _lengths.size() - 1;
+}
+
+char LengthStorage::getX() const {
+    return _x;
+}
+
+LengthStorage concatenate(const LengthStorage& first, const LengthStorage& second) {
+    LengthStorage ans(first.size(), first.getX());
     if (first[0] != INF && second[0] != INF) {
         ans.setLength(0, first[0] + second[0]);
     } else {
         ans.setLength(0, INF);
     }
-    for (size_t curCount = 1; curCount < K + 1; ++curCount) {
+    for (size_t curCount = 1; curCount < first.size() + 1; ++curCount) {
         int minimalLength = INF;
         for (size_t firstCount = 0; firstCount <= curCount; ++firstCount) {
             minimalLength = std::min(minimalLength, first[firstCount] + second[curCount - firstCount]);
         }
-        ans.setLength(i, minimalLength);
+        ans.setLength(curCount, minimalLength);
     }
     return ans;
 }
 
-LengthStorage add(const LengthStorage& first,
-    const LengthStorage& second) {
-    LengthStorage ans(_lengths.size(), _x);
-    for (size_t curCount = 0; curCount < K + 1; ++curCount) {
-        ans.setLength(i, std::min(first[curCount], second[curCount]));
+LengthStorage add(const LengthStorage& first, const LengthStorage& second) {
+    LengthStorage ans(first.size(), first.getX());
+    for (size_t curCount = 0; curCount < first.size() + 1; ++curCount) {
+        ans.setLength(curCount, std::min(first[curCount], second[curCount]));
     }
     return ans;
 }
 
-LengthStorage KleenieStar(const LengthStorage& storage) {
-    LengthStorage ans(_lengths.size(), _x);
+LengthStorage kleenieStar(const LengthStorage& storage) {
+    LengthStorage ans(storage.size(), storage.getX());
     ans.setLength(0, 0);
-    for (size_t curCount = 1; curCount < K + 1; ++curCount) {
+    for (size_t curCount = 1; curCount < storage.size() + 1; ++curCount) {
         int minimalLength = storage[curCount];
         for (size_t firstCount = 0; firstCount < curCount; ++firstCount) {
-            minimalLength = std::min(minimalLength, storage[firstCount] + storage[curCount - firstCount]);
+            minimalLength = std::min(minimalLength, ans[firstCount] + ans[curCount - firstCount]);
         }
-        ans.setLength(i, minimalLength);
+        ans.setLength(curCount, minimalLength);
     }
     return ans;
+}
+
+void LengthStorage::print() {
+    for (size_t i = 0; i < _lengths.size(); ++i) {
+        std::cout << _lengths[i] << " ";
+    }
+    std::cout << std::endl;
 }
 
 int LengthStorage::operator[](size_t count) const{
@@ -72,4 +89,22 @@ int LengthStorage::operator[](size_t count) const{
 
 void LengthStorage::setLength(size_t count, int value) {
     _lengths[count] = value;
+}
+
+
+bool operator==(const LengthStorage& a, const LengthStorage& b) {
+    if (a.size() != b.size()) {
+        return false;
+    }
+
+    if (a.getX() != b.getX()) {
+        return false;
+    }
+
+    for (size_t i = 0; i < a.size() + 1; ++i) {
+        if (a[i] != b[i]) {
+            return false;
+        }
+    }
+    return true;
 }

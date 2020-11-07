@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <stack>
-#include<iostream>
+#include <iostream>
 #include "LengthStorage.h"
 
 class RegularHandler {
@@ -18,7 +18,12 @@ private:
     void _handleChar(std::stack<LengthStorage>& regulars, char c);
 public:
     RegularHandler();
-    void readInput();
+    RegularHandler(std::string regularExpression, char x, size_t count);
+    void readInput(std::istream& is);
     size_t getAnswer();
-
+    void print();
+    friend bool operator==(const RegularHandler& a, const RegularHandler& b);
 };
+
+bool operator==(const RegularHandler& a, const RegularHandler& b);
+
