@@ -4,9 +4,13 @@
 
 TEST(RegularHandlerTests, readInputTest) {
     RegularHandler a;
-    RegularHandler b("ab + c.aba. ∗ .bac. + . + ∗ ", 'b', 2);
+    RegularHandler b("ab + c.aba. * .bac. + . + * ", 'b', 2);
     std::ifstream file;
     file.open("../testing/1.in");
+    if (file.fail()){
+        file.open("testing/1.in");
+    }
+    
 	a.readInput(file);
     file.close();
 	ASSERT_EQ(a == b, true);
@@ -22,6 +26,9 @@ TEST(RegularHandlerTests, FirstGetAnswerTest) {
     RegularHandler a;
     std::ifstream file;
     file.open("../testing/samples1.in");
+    if (file.fail()){
+        file.open("testing/samples1.in");
+    }
 	a.readInput(file);
     file.close();
     size_t ans = a.getAnswer();
@@ -33,6 +40,9 @@ TEST(RegularHandlerTests, SecondGetAnswerTest) {
     RegularHandler a;
     std::ifstream file;
     file.open("../testing/samples2.in");
+    if (file.fail()){
+        file.open("testing/samples2.in");
+    }
 	a.readInput(file);
     file.close();
     size_t ans = a.getAnswer();
@@ -44,6 +54,9 @@ TEST(RegularHandlerTests, ThirdGetAnswerTest) {
     RegularHandler a;
     std::ifstream file;
     file.open("../testing/samples3.in");
+    if (file.fail()){
+        file.open("testing/samples3.in");
+    }
 	a.readInput(file);
     file.close();
     size_t ans = a.getAnswer();

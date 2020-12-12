@@ -90,7 +90,7 @@ LengthStorage RegularHandler::_handleRegular() {
     for (char c : _regularExpression) {
         if (c != ' ') {
             _handleChar(regulars, c);
-            regulars.top().print();
+            //regulars.top().print();
         }
     }
     return regulars.top();
