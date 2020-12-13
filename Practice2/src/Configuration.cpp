@@ -22,21 +22,24 @@ char Configuration::getLeftSymbol() const {
     return rule.LeftSymbol;
 }
 
-std::set<Configuration> scan(const Configuration& conf, char letter) {
+std::set<Configuration> Scan(const Configuration& conf, char letter) {
+    std::cout << "Scan " << conf << std::endl;
     if (conf.isRuleRead()) {
         return {};
     }
     if (conf.getCurrentSymbol() == letter) {
+        std::cout << "Scan " << conf << std::endl;
         Configuration ans = conf;
         ans.indOfCurrentPosition++;
         ans.numberOfClass++;
+        std::cout << ans << std::endl;
         return { ans };
     } else {
         return {};
     }
 }
 
-std::set<Configuration> predict(const Configuration& conf, const Rule& rule) {
+std::set<Configuration> Predict(const Configuration& conf, const Rule& rule) {
     if (conf.getCurrentSymbol() != rule.LeftSymbol) {
         return {};
     }
@@ -44,8 +47,11 @@ std::set<Configuration> predict(const Configuration& conf, const Rule& rule) {
     return { ans };
 }
 
-std::set<Configuration> complete(const Configuration& topConf,
+std::set<Configuration> Complete(const Configuration& topConf,
                                  const Configuration& bottomConf) {
+    if (topConf.isRuleRead()) {
+        return {};
+    }
     if (!bottomConf.isRuleRead()) {
         return {};
     }
@@ -61,3 +67,29 @@ std::set<Configuration> complete(const Configuration& topConf,
     return { ans };
 }
 
+bool operator <(const Configuration& first, const Configuration& second) {
+    if (first.rule == second.rule) {
+        if (first.indOfCurrentPosition == second.indOfCurrentPosition) {
+            if (first.indOfLastReadSymbol == second.indOfLastReadSymbol) {
+                return first.numberOfClass < second.numberOfClass;
+            } else {
+                return first.indOfLastReadSymbol < second.indOfLastReadSymbol;
+            }
+        } else {
+            return first.indOfCurrentPosition < second.indOfCurrentPosition;
+        }
+    } else {
+        return first.rule < second.rule;
+    }
+}
+
+bool operator ==(const Configuration& first, const Configuration& second) {
+    return !(first < second) && !(second < first);
+}
+
+std::ostream& operator <<(std::ostream& os, const Configuration& conf) {
+    os << conf.rule.LeftSymbol<<"->"<<conf.rule.rightPart;
+    os << " " << conf.indOfCurrentPosition << " " << conf.indOfLastReadSymbol;
+    os << " " << conf.numberOfClass << "\n";
+    return os;
+}

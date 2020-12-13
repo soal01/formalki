@@ -14,7 +14,13 @@ struct Configuration {
     bool isRuleRead() const;
 };
 
-std::set<Configuration> scan(const Configuration& conf, char letter);
-std::set<Configuration> predict(const Configuration& conf, const Rule& rule);
-std::set<Configuration> complete(const Configuration& topConf,
+std::set<Configuration> Scan(const Configuration& conf, char letter);
+std::set<Configuration> Predict(const Configuration& conf, const Rule& rule);
+std::set<Configuration> Complete(const Configuration& topConf,
                                  const Configuration& bottomConf);
+
+
+bool operator <(const Configuration& first, const Configuration& second);
+bool operator ==(const Configuration& first, const Configuration& second);
+
+std::ostream& operator <<(std::ostream& os, const Configuration& conf);

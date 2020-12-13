@@ -1,11 +1,19 @@
 #include "Grammar.h"
 
 
-Rule::Rule(const std::string& strOfRule="") {
+Rule::Rule(const std::string& strOfRule) {
     LeftSymbol = strOfRule[0];
     for (size_t i = 3; i < strOfRule.size(); ++i) {
         rightPart.push_back(strOfRule[i]);
     }
+    if (rightPart == "\\eps") {
+        rightPart = "";
+    }
+}
+
+Rule::Rule() {
+    LeftSymbol = 0;
+    rightPart = "";
 }
 
 char Rule::operator[](size_t ind) const {
@@ -29,4 +37,30 @@ std::istream& operator >>(std::istream& is, Grammar& grammar) {
         grammar.rules.insert(rule);
     }
     return is;
+}
+
+
+bool operator ==(const Rule& first, const Rule& second) {
+    return first.LeftSymbol == second.LeftSymbol && first.rightPart == second.rightPart;
+}
+
+
+bool operator <(const Rule& first, const Rule& second) {
+    if (first.LeftSymbol == second.LeftSymbol) {
+        return first.rightPart < second.rightPart;
+    }
+    return first.LeftSymbol < second.LeftSymbol;
+}
+
+
+bool operator ==(const Grammar& first, const Grammar& second) {
+    if (first.rules.size() != second.rules.size()) {
+        return false;
+    }
+    for (auto el : first.rules) {
+        if (second.rules.find(el) == second.rules.end()) {
+            return false;
+        }
+    }
+    return true;
 }

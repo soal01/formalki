@@ -5,9 +5,9 @@
 
 class EarleyAlgorithm : public Algo {
 private:
-    std::vector<std::set<Configuration>> classes;
-    std::string str;
-    Grammar grammar;
+    std::vector<std::set<Configuration>> _classes;
+    std::string _str;
+    Grammar _grammar;
 
     void completeForClass(int numberOfClass);
     void predictForClass(int numberOfClass);
